@@ -4,7 +4,10 @@ import {
   ADD_PRODUCT_ERROR,
   START_PRODUCTS_DOWNLOAD,
   PRODUCTS_DOWNLOAD_SUCCESS,
-  PRODUCTS_DOWNLOAD_ERROR
+  PRODUCTS_DOWNLOAD_ERROR,
+  REMOVE_PRODUCT,
+  REMOVE_PRODUCT_SUCCESS,
+  REMOVE_PRODUCT_ERROR
 } from './types'
 import { axiosClient } from '../config'
 import Swal from 'sweetalert2'
@@ -38,5 +41,17 @@ export function getProductsAction() {
     } catch (error) {
       dispatch({ type: PRODUCTS_DOWNLOAD_ERROR, payload: true })
     }
+  }
+}
+
+export const removeProductAction = productId => async dispatch => {
+  dispatch({ type: REMOVE_PRODUCT })
+
+  try {
+    await axiosClient.delete(`/products/${productId}`)
+    dispatch({ type: REMOVE_PRODUCT_SUCCESS, payload: productId })
+    Swal.fire('Correcto', 'El producto se eliminó correctamente.', 'success')
+  } catch (error) {
+    dispatch({ type: REMOVE_PRODUCT_ERROR, payload: true })
   }
 }
