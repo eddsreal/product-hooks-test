@@ -1,12 +1,14 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
-import { removeProductAction } from '../actions/productActions'
+import { removeProductAction, getEditProduct } from '../actions/productActions'
 import Swal from 'sweetalert2'
 
 export default function Product({ product }) {
   const { name, price, id } = product
   const dispatch = useDispatch()
+  const history = useHistory()
+
   const removeProduct = async productId => {
     const confirmation = await Swal.fire({
       title: '¿Estás Seguro?',
@@ -22,12 +24,18 @@ export default function Product({ product }) {
       dispatch( removeProductAction(productId) )
     }
   }
+
+  const redirectEdit = product => {
+    history.push(`/products/edit/${product.id}`)
+    dispatch( getEditProduct(product) )
+  }
+
   return (
     <tr>
       <td>{name}</td>
       <td><span className="font-weight-bold">${price}</span></td>
       <td className="acciones">
-        <Link to={`/products/edit/${id}`} className="btn btn-primary mr-2">Editar</Link>
+        <button type="button" onClick={ () => redirectEdit(product) } className="btn btn-primary mr-2">Editar</button>
         <button className="btn btn-danger" onClick={ () => removeProduct(id) }>Eliminar</button>
       </td>
     </tr>

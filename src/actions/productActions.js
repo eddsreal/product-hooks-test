@@ -7,7 +7,11 @@ import {
   PRODUCTS_DOWNLOAD_ERROR,
   REMOVE_PRODUCT,
   REMOVE_PRODUCT_SUCCESS,
-  REMOVE_PRODUCT_ERROR
+  REMOVE_PRODUCT_ERROR,
+  GET_EDIT_PRODUCT,
+  EDIT_PRODUCT_SUCCESS,
+  EDIT_PRODUCT_ERROR,
+  EDIT_PRODUCT
 } from './types'
 import { axiosClient } from '../config'
 import Swal from 'sweetalert2'
@@ -53,5 +57,21 @@ export const removeProductAction = productId => async dispatch => {
     Swal.fire('Correcto', 'El producto se eliminó correctamente.', 'success')
   } catch (error) {
     dispatch({ type: REMOVE_PRODUCT_ERROR, payload: true })
+  }
+}
+
+export const getEditProduct = product => dispatch => {
+  dispatch({ type: GET_EDIT_PRODUCT, payload: product })
+}
+
+export const editProductAction = product => async dispatch => {
+  dispatch({ type: EDIT_PRODUCT })
+  
+  try {
+    await axiosClient.put(`/products/${product.id}`, product)   
+    dispatch({ type: EDIT_PRODUCT_SUCCESS, payload: product })
+  } catch (error) {
+    console.log(error)
+    dispatch({ type: EDIT_PRODUCT_ERROR, payload: true })
   }
 }
